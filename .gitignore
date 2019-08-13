@@ -5,4 +5,4 @@
 **/.ipynb_checkpoints
 **/venv
 **/migrations
-**/data_*
+**/data
