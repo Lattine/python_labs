@@ -4,12 +4,16 @@
 # @Author  : Lattine
 
 # ======================
+import os
 import cv2
+import time
 import numpy as np
 
 
 class ImageTableOCR:
     def __init__(self, path):
+        self.path = path + "_" + str(int(time.time()))
+        self._check_path(self.path)
         self.image = cv2.imread(path)
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         self.scale = 5
@@ -55,8 +59,14 @@ class ImageTableOCR:
         for i in range(len(y_list) - 1):
             for j in range(len(x_list) - 1):
                 roi = self.image[x_list[j]:x_list[j + 1], y_list[i]:y_list[i + 1]]
-                cv2.imshow("img", roi)
-                cv2.waitKey(0)
+                # cv2.imshow("img", roi)
+                # cv2.waitKey(0)
+                filename = f"/cell_x({x_list[j]}_{x_list[j + 1]})_y({y_list[i]}_{y_list[i + 1]}).png"
+                cv2.imwrite(self.path + filename, roi)
+
+    def _check_path(self, path):
+        if not os.path.exists(path):
+            os.makedirs(path)
 
 
 if __name__ == '__main__':
