@@ -54,7 +54,6 @@ class ImageTableOCR:
         print("y", y_list)
         for i in range(len(y_list) - 1):
             for j in range(len(x_list) - 1):
-                print(self.image.shape, y_list[i], y_list[i + 1], x_list[j], x_list[j + 1])
                 roi = self.image[x_list[j]:x_list[j + 1], y_list[i]:y_list[i + 1]]
                 cv2.imshow("img", roi)
                 cv2.waitKey(0)
