@@ -6,8 +6,8 @@
 # ======================
 import os
 import argparse
-
-import cv2 as cv
+import numpy as np
+import cv2
 
 
 class Image:
@@ -15,20 +15,10 @@ class Image:
         self.filename = filename
 
     def eliminate_red(self):
-        img = cv.imread(self.filename)
-        # Python是GBR的顺序
-        # G = img[:, :, 0]
-        # B = img[:, :, 1]
-        R = img[:, :, 2]
-        row, col = R.shape
-        for i in range(row):
-            for j in range(col):
-                if R[i, j] > 220:
-                    R[i, j] = 255
-                else:
-                    continue
-
-        cv.imwrite(self.filename + ".em.png", R)
+        img = cv2.imread(self.filename)
+        B, G, R = cv2.split(img)
+        R[R[:, :] > 200] = 255
+        cv2.imwrite(self.filename + ".em.png", R)
 
 
 if __name__ == '__main__':
