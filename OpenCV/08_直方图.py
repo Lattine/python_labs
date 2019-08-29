@@ -8,7 +8,7 @@ import cv2
 from matplotlib import pyplot as plt
 
 # ------------- 直方图 ------------------
-src = cv2.imread("data/dog.png")
+src = cv2.imread("data/table.png")
 color = ('b', 'g', 'r')
 for i, col in enumerate(color):
     histr = cv2.calcHist([src], [i], None, [256], [0, 256])  # 统计各个颜色通道的直方图

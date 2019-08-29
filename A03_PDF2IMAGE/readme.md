@@ -1,3 +1,0 @@
-- 1.安装插件 `pip install pdf2image -i https://pypi.tuna.tsinghua.edu.cn/simple/`
-- 2.下载`poppler`（转换过程真正需要，将bin目录添加至PATH），已上传至百度云
-- 3.使用代码
