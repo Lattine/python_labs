@@ -35,22 +35,42 @@ def affine_correction(src):
 
 # 旋转纠正歪斜页面
 def rotation_correct(src):
-    gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+    # 度数转换
+    def degree_trans(theta):
+        res = theta / np.pi * 180
+        return res
 
-    ret, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-    contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    # if not contours: return src
-    max_area = -1
-    max_idx = -1
-    for i, c in enumerate(contours):
-        area = cv2.contourArea(c)
-        if max_area < area:
-            max_area = area
-            max_idx = i
-    approx = cv2.approxPolyDP(contours[max_idx], 10, True)  # 逼近区域成为一个形状
-    h, w = thresh.shape
-    angle = math.atan2(approx[0][0][0] - approx[1][0][0], approx[0][0][1] - approx[1][0][1])
-    M = cv2.getRotationMatrix2D((h, w), angle, 1)  # 45°旋转图片并缩小一半
-    rotation = cv2.warpAffine(src, M, (h, w), borderValue=(255, 255, 255))
+    # 通过霍夫变换计算角度
+    def calc_degree(src):
+        gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+        ret, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 1))
+        mid = cv2.erode(thresh, kernel, iterations=5)
 
+        dst_image = cv2.Canny(mid, 50, 200, 3)
+
+        # 通过霍夫变换检测直线
+        # 第4个参数就是阈值，阈值越大，检测精度越高
+        lines = cv2.HoughLines(dst_image, 1, np.pi / 180, 200)
+
+        sum = 0
+        for i in range(len(lines)):
+            for rho, theta in lines[i]:
+                sum += theta
+
+        # 对所有角度求平均，这样做旋转效果会更好
+        average = sum / len(lines)
+        angle = degree_trans(average) - 90
+        return angle
+
+    # 旋转变换
+    def rotate_image(src, degree):
+        h, w = src.shape[:2]
+        M = cv2.getRotationMatrix2D((w / 2.0, h / 2.0), degree, 1)
+        rotate = cv2.warpAffine(src, M, (w, h), borderValue=(255, 255, 255))
+        return rotate
+
+    degree = calc_degree(src)
+    print("调整角度：", degree)
+    rotation = rotate_image(src, degree)
     return rotation
