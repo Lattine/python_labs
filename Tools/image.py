@@ -4,11 +4,11 @@
 # @Author  : Lattine
 
 # ======================
-import math
 
 
 def get_box_coord(x, y, w, h, angle):
     """根据左上角坐标和旋转角度，计算旋转后矩形的4个坐标"""
+    import math
 
     # 矩形框中点(x0,y0)
     x0 = x + w / 2
@@ -29,3 +29,26 @@ def get_box_coord(x, y, w, h, angle):
         pt3 = (x0 + line * math.cos(angle_bg), y0 - line * math.sin(angle_bg))  # 右下角
         pt4 = (x0 - line * math.cos(angle_sm), y0 + line * math.sin(angle_sm))  # 左下角
     return pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1], pt4[0], pt4[1]
+
+
+def pdf2img(path):
+    """ PDF扫描件转图片， 基于PyMuPDF插件 """
+    import cv2
+    import fitz
+    import numpy as np
+
+    doc = fitz.open(path)  # 打开PDF文件，doc为Document类型，包含文件所有页的列表
+
+    zoom_x, zoom_y = 4.0, 4.0  # 缩放比例
+    rotate = 0
+    trans = fitz.Matrix(zoom_x, zoom_y).preRotate(rotate)
+
+    imgs = []
+    for pg in range(doc.pageCount):
+        page = doc[pg]
+        pm = page.getPixmap(matrix=trans, alpha=False)
+        png_data = pm.getPNGdata()
+        img_array = np.frombuffer(png_data, dtype=np.uint8)
+        img = cv2.imdecode(img_array, cv2.IMREAD_ANYCOLOR)
+        imgs.append(img)
+    return imgs
