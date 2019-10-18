@@ -31,6 +31,30 @@ def get_box_coord(x, y, w, h, angle):
     return pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1], pt4[0], pt4[1]
 
 
+def get_ordered_point(a, b, c, d):
+    """依据四个无序的坐标点， 返回左上，右上，左下，右下顺序的坐标"""
+    arr = [a, b, c, d]
+    arr.sort(key=lambda x: x[0])
+    if arr[0][1] < arr[1][1]:
+        left_up = arr[0]
+    else:
+        left_up = arr[1]
+    if arr[3][1] > arr[2][1]:
+        right_down = arr[3]
+    else:
+        right_down = arr[2]
+    arr.sort(key=lambda x: x[1])
+    if arr[0][0] > arr[1][0]:
+        right_up = arr[0]
+    else:
+        right_up = arr[1]
+    if arr[2][0] < arr[3][0]:
+        left_down = arr[2]
+    else:
+        left_down = arr[3]
+    return left_up, right_up, left_down, right_down
+
+
 def pdf2img(path):
     """ PDF扫描件转图片， 基于PyMuPDF插件 """
     import cv2
