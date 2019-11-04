@@ -20,3 +20,11 @@ def timer(func):
         return res
 
     return wrapper
+
+
+def time_stamp(t, fmt=r"%Y/%m/%d %H:%M:%S"):
+    """将字符串时间，转换为时间数组"""
+    import time
+    time_struct = time.strptime(t, fmt)
+    time_stamp = int(time.mktime(time_struct))
+    return time_stamp
