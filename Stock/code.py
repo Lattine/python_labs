@@ -89,7 +89,7 @@ class SHSZ:
         now = datetime.datetime.now()
         today = datetime.datetime.strftime(now, r"%Y-%m-%d")
         print(today)
-        with open(os.path.join(self.config.codes_list, f"{today}.json"), "w+", encoding="utf-8") as fw:
+        with open(os.path.join(self.config.data_path, "{}.json".format(today)), "w+", encoding="utf-8") as fw:
             json.dump(self.codes, fw, ensure_ascii=False, indent=True)
 
 
