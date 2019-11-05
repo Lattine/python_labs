@@ -17,15 +17,22 @@ from html import MainContent
 
 class SHSZ:
     def __init__(self, config):
-        self.config = config
-        self.mc = MainContent()
-        self.codes = self._grap_codes()
-        self._grap_news()
-        self._dump_codes()
+        self.config = config  # 配置
+        self.week_day = datetime.datetime.now().weekday()  # 判读当天周几，不同的时间有不同的操作
+        self.time_thresh = 86400 if self.week_day != 1 else 259200  # 周一需要爬取3天的新闻
+
+        self.mc = MainContent()  # HTML内容抽取类
+
+        if self.week_day in [1, 2, 3, 4, 5]:  # 只有工作日的信息才需要爬取
+            self.codes = self._grap_codes()  # 获取所有股票代码
+            self._grap_news()
+            self._dump_codes()
+        else:
+            print("Sat. and Sun. Day should passed!")
 
     def _grap_codes(self):
         datas = []
-        for i in range(1, 2):
+        for i in range(1, 1000):
             try:
                 params = {
                     "page": i,
@@ -52,13 +59,13 @@ class SHSZ:
                     }
                     datas.append(em)
             except:
-                break
+                continue
         return datas
 
     def _grap_news(self):
         for item in self.codes:
+            print(item["code"])
             item["news"] = self._grap_news_by_code(item["code"])
-            break
 
     def _grap_news_by_code(self, code):
         news = []
@@ -70,7 +77,6 @@ class SHSZ:
                 "page": 1
             }
             resp = requests.get(self.config.news_hub, params=params, headers=self.config.headers)
-            print(resp, resp.url)
             resp = resp.json()
 
             items = resp["list"]
@@ -88,7 +94,6 @@ class SHSZ:
     def _dump_codes(self):
         now = datetime.datetime.now()
         today = datetime.datetime.strftime(now, r"%Y-%m-%d")
-        print(today)
         with open(os.path.join(self.config.data_path, "{}.json".format(today)), "w+", encoding="utf-8") as fw:
             json.dump(self.codes, fw, ensure_ascii=False, indent=True)
 
