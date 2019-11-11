@@ -17,7 +17,7 @@ def load_cookies(path):
 
 
 class ConfigXueQiu:
-    BASE_URL = os.path.abspath(os.path.dirname(os.getcwd()))
+    BASE_URL = os.path.abspath(os.getcwd())
 
     codes_hub = "https://xueqiu.com/service/v5/stock/screener/quote/list"
     news_hub = "https://xueqiu.com/statuses/stock_timeline.json"
