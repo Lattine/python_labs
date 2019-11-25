@@ -10,6 +10,6 @@ from app import celery, mail
 
 @celery.task
 def send_mail(data):
-    msg = Message("Ping Test!", sender="liuzhi@iwowai.com", recipients=[data["email"]])
+    msg = Message("Ping Test!", sender="xxx@xxx.com", recipients=[data["email"]])
     msg.body = data["message"]
     mail.send(msg)
