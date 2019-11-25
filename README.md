@@ -6,4 +6,4 @@
 - Word_Cloud
 - Stock
 - Third_Party_Interface
-- flask_redis_celery: 基于Flask和
+- flask_redis_celery: 基于Flask和Celery的Demo，其中Flower用于监测之用。
