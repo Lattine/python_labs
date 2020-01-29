@@ -12,10 +12,10 @@ def find_smallest(lst):
 
 def selection_sort(lst):
     arr = []
-    for i in range(len(lst)):
+    for _ in range(len(lst)):
         # 找出数组中最小的元素，加入新数组中，并在原数组中删除它
         smallest = find_smallest(lst)
-        arr.append(lst.pop(smallest))
+        arr.append(lst.pop(smallest))  # pop() 函数用于移除列表中的一个元素（默认最后一个元素），并且返回该元素的值。
     return arr
 
 
