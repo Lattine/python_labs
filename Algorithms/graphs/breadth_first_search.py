@@ -1,3 +1,7 @@
+# 广度优先搜索算法
+# 适用于非加权图
+
+
 def bfs(graph, start_name, check_fn):
     # graph 图
     # start_name 开始节点名称
